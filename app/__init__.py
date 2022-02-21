@@ -11,6 +11,7 @@ def create_app(env: str = "development"):
         config_object = settings[env]
         app.config.from_object(config_object)
         app.logger.info(f"App Initialized with {env} environment")
+        app.logger.info("Config Settings : %s ", app.config.items())
         init_extensions(app)
         return app
     except KeyError:

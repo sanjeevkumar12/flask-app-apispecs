@@ -1,25 +1,19 @@
 import os
 from pathlib import Path
 
+BASE_DIR = Path(__file__).parent.parent
+
 
 class Config(object):
-    BASE_DIR: Path = Path(__file__).parent.parent
+    BASE_DIR: Path = BASE_DIR
     DEBUG: bool = False
     TESTING: bool = False
     SECRET_KEY: str = os.environ.get("APP_SECRET_KEY")
     API_TITLE: str = os.environ.get("API_TITLE")
     API_VERSION: str = os.environ.get("API_VERSION")
-    OPENAPI_VERSION: str = "3.0.2"
-    OPENAPI_URL_PREFIX: str = "/"
-    OPENAPI_SWAGGER_UI_PATH: str = "/docs"
-    OPENAPI_SWAGGER_UI_URL: str = (
-        "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.24.2/"
-    )
-
-    OPENAPI_RAPIDOC_PATH: str = "/redoc"
-    OPENAPI_RAPIDOC_URL: str = (
-        "https://cdn.jsdelivr.net/npm/rapidoc/dist/rapidoc-min.js"
-    )
+    API_DESCRIPTION: str = os.environ.get("API_DESCRIPTION")
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI")
 
 
 class ProductionConfig(Config):
@@ -41,3 +35,5 @@ settings = {
 }
 
 API_BLUEPRINTS = ["auth.api.auth_blueprint"]
+
+MODEL_LOOKUP_EXCLUDE_DIRECTORY = []

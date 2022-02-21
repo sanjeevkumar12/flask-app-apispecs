@@ -10,10 +10,24 @@ python-dotenv = "*"
 apispec-webframeworks = "*"
 apispec = {extras = ["marshmallow"], version = "*"}
 marshmallow = "*"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
 
 [dev-packages]
 black = "==22.1.0"
 isort = "==5.10.1"
+flake8 = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.7"
+
+[scripts]
+server = "flask run"
+black = "python -m black ."
+flake8 = "python -m flake8"
+isort = "isort ."
+routes = "flask routes"
+db = "flask db"
+tests = "pytest --cov --cov-fail-under=80"

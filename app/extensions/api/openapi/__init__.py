@@ -1,3 +1,5 @@
+import typing
+
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from apispec_webframeworks.flask import FlaskPlugin
@@ -10,7 +12,7 @@ from ..security import api_key_scheme, jwt_scheme
 class OpenAPISpecs(object):
     def __init__(self, app: Flask = None):
         self.app = None
-        self.api_docs = APISpec(
+        self.api_docs: typing.Union[APISpec, None] = APISpec(
             title="API's",
             version="1.0.0",
             openapi_version="3.0.2",
@@ -20,10 +22,22 @@ class OpenAPISpecs(object):
         self.view_path = []
         self.schemas = {}
 
+        if self.app:
+            self._load()
+
     def init_app(self, app: Flask):
         self.app = app
+        self._load()
+
+    def _load(self):
+        self.api_docs.title = self.app.config.get("API_TITLE")
+        self.api_docs.version = self.app.config.get("API_VERSION")
+
         self.api_docs.components.security_scheme("api_key", api_key_scheme)
         self.api_docs.components.security_scheme("jwt", jwt_scheme)
+        self.api_docs.options.update(
+            {"info": {"description": self.app.config.get("API_DESCRIPTION")}}
+        )
 
     def register_schema(self, name: str, schema: Schema) -> None:
         self.api_docs.components.schema(name, schema=schema)
