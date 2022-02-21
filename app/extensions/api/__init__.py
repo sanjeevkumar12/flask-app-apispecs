@@ -5,6 +5,9 @@ from app.extensions.api.openapi import open_api_docs
 from app.extensions.api.openapi.views import (rapidoc_ui, redoc_ui,
                                               swagger_json, swagger_ui)
 
+
+from app import conf
+
 api_blp = Blueprint(
     "api",
     "apis",
@@ -34,4 +37,4 @@ def init_apis(app: Flask):
             return jsonify({"errors": messages}), err.code
 
 
-__all__ = ["Blueprint", "init_apis"]
+__all__ = ["Blueprint", "init_apis" ,"open_api_docs"]
