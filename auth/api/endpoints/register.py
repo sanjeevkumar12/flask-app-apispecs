@@ -1,12 +1,13 @@
+from http import HTTPStatus
+
 from flask import jsonify
 from webargs.flaskparser import use_args, use_kwargs
-from http import HTTPStatus
 
 from app.extensions.api import views
 
+from ...services import auth_repository
 from ..blueprints import auth_blueprint
 from ..schema.register import RegisterSchema
-from ...services import auth_repository
 
 
 class RegisterAPIView(views.APIView):
@@ -24,12 +25,16 @@ class RegisterAPIView(views.APIView):
             description: User Details
             content:
                 application/json:
-                    schema: RegisterSchema
+                    schema: Register
         responses:
             200:
                 content:
                     application/json:
-                        schema: RegisterSchema
+                        schema: Register
+            422:
+                content:
+                    application/json:
+                        schema: APIError
         """
         kwargs.pop("confirm_password")
         user = auth_repository.get_user_by_email(kwargs.get("email"))

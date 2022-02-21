@@ -1,12 +1,13 @@
+from http import HTTPStatus
+
 from flask import Blueprint, Flask, jsonify
 
+from app import conf
+from app.core.http.exceptions.handler import handle_error_422
 from app.core.utils.loaders.modules import load_module
 from app.extensions.api.openapi import open_api_docs
 from app.extensions.api.openapi.views import (rapidoc_ui, redoc_ui,
                                               swagger_json, swagger_ui)
-
-
-from app import conf
 
 api_blp = Blueprint(
     "api",
@@ -26,7 +27,8 @@ def init_apis(app: Flask):
     app.register_blueprint(api_blp)
     open_api_docs.init_app(app)
 
-    @app.errorhandler(422)
+    app.register_error_handler(HTTPStatus.UNPROCESSABLE_ENTITY, handle_error_422)
+
     @app.errorhandler(400)
     def handle_error(err):
         headers = err.data.get("headers", None)
@@ -37,4 +39,4 @@ def init_apis(app: Flask):
             return jsonify({"errors": messages}), err.code
 
 
-__all__ = ["Blueprint", "init_apis" ,"open_api_docs"]
+__all__ = ["Blueprint", "init_apis", "open_api_docs"]
