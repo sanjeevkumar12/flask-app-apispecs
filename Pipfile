@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "==2.0.3"
+flask-smorest = "==0.37.0"
+python-dotenv = "*"
+apispec-webframeworks = "*"
+apispec = {extras = ["marshmallow"], version = "*"}
+marshmallow = "*"
+
+[dev-packages]
+black = "==22.1.0"
+isort = "==5.10.1"
+
+[requires]
+python_version = "3.7"
