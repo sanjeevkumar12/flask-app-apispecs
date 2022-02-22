@@ -6,8 +6,12 @@ from app import conf
 from app.core.http.exceptions.handler import handle_error_422
 from app.core.utils.loaders.modules import load_module
 from app.extensions.api.openapi import open_api_docs
-from app.extensions.api.openapi.views import (rapidoc_ui, redoc_ui,
-                                              swagger_json, swagger_ui)
+from app.extensions.api.openapi.views import (
+    rapidoc_ui,
+    redoc_ui,
+    swagger_json,
+    swagger_ui,
+)
 
 api_blp = Blueprint(
     "api",

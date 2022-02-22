@@ -1787,36 +1787,34 @@ REDOC_UI = """
 """
 
 RAPI_DOC_UI = """
-
-<!doctype html> <!-- Important: must specify -->
-<html>
-<head>
-  <meta charset="utf-8"> <!-- Important: rapi-doc uses utf8 characters -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet"> 
-  <script type="module" src="https://unpkg.com/rapidoc/dist/rapidoc-min.js"></script>
-  <style>
-  font-family: 'Roboto Mono', monospace;
-  </style>
-</head>
-<body>
-  <rapi-doc
-    spec-url="{{SWAGGER_JSON_URL}}"
-    render-style = "read"
-      theme = "light"
-      show-header = "false"
-      regular-font="Open Sans" mono-font="Roboto Mono"
-       bg-color="" text-color=""
-        nav-bg-color="#3e4b54" 
-        nav-text-color="" 
-        nav-hover-bg-color="" nav-hover-text-color="" 
-        nav-accent-color="#fd6964" primary-color="#ea526f"
-      
-  > </rapi-doc>
-</body>
-</html>
-
+    <!doctype html> <!-- Important: must specify -->
+    <html>
+    <head>
+      <meta charset="utf-8"> <!-- Important: rapi-doc uses utf8 characters -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet"> 
+      <script type="module" src="https://unpkg.com/rapidoc/dist/rapidoc-min.js"></script>
+      <style>
+      font-family: 'Roboto Mono', monospace;
+      </style>
+    </head>
+    <body>
+      <rapi-doc
+        spec-url="{{SWAGGER_JSON_URL}}"
+        render-style = "read"
+          theme = "light"
+          show-header = "false"
+          regular-font="Open Sans" mono-font="Roboto Mono"
+           bg-color="" text-color=""
+            nav-bg-color="#3e4b54" 
+            nav-text-color="" 
+            nav-hover-bg-color="" nav-hover-text-color="" 
+            nav-accent-color="#fd6964" primary-color="#ea526f"
+          
+      > </rapi-doc>
+    </body>
+    </html>
 """
 
 

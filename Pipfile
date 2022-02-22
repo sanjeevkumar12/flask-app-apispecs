@@ -21,6 +21,7 @@ isort = ">=5.10.1"
 flake8 = "*"
 pytest = "*"
 pytest-cov = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.9"

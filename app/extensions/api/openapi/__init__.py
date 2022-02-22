@@ -8,7 +8,7 @@ from marshmallow import Schema
 
 from app.core.http.response.schemas import APIErrorSchema
 
-from ..security import api_key_scheme, jwt_scheme
+from ..security import jwt_scheme
 
 
 class OpenAPISpecs(object):
@@ -23,7 +23,8 @@ class OpenAPISpecs(object):
         )
         self.view_path = []
         self.schemas = {}
-
+        self.api_docs.components.security_scheme("JWT", jwt_scheme)
+        self.register_schema("APIError", APIErrorSchema)
         if self.app:
             self._load()
 
@@ -34,12 +35,9 @@ class OpenAPISpecs(object):
     def _load(self):
         self.api_docs.title = self.app.config.get("API_TITLE")
         self.api_docs.version = self.app.config.get("API_VERSION")
-
-        self.api_docs.components.security_scheme("JWT", jwt_scheme)
         self.api_docs.options.update(
             {"info": {"description": self.app.config.get("API_DESCRIPTION")}}
         )
-        self.register_schema("APIError", APIErrorSchema)
 
     def register_schema(self, name: str, schema: Schema) -> None:
         self.api_docs.components.schema(name, schema=schema)
