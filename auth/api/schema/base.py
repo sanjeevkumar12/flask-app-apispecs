@@ -1,10 +1,13 @@
-from marshmallow import Schema, fields, pre_load
+from marshmallow import Schema, fields, pre_load, validate
 
 
 class TokenSchema(Schema):
     access_token = fields.String(dump_only=True)
-    access_expire = fields.TimeDelta(dump_only=True)
-    token_type = fields.String(dump_only=True)
+    expire_at = fields.Integer(
+        dump_only=True,
+        description="Token Expire in milliseconds",
+    )
+    token_type = fields.String(dump_only=True, validate=validate.OneOf(["Bearer"]))
 
     class Meta:
         ordered = True

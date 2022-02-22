@@ -5,6 +5,7 @@ from webargs.flaskparser import use_kwargs
 from app.extensions.api import views
 
 from ...services import auth_repository
+from ..schema.base import UserTokenSchema
 from ..schema.login import LoginSchema
 
 
@@ -36,10 +37,16 @@ class LoginAPIView(views.APIView):
         """
         user = auth_repository.get_user_by_email(kwargs.get("email"))
         if user and user.check_password(kwargs.get("password")):
-            return {
-                "user": user,
-                "token": auth_repository.create_user_token(user),
-            }, HTTPStatus.OK
+            user_schema = UserTokenSchema()
+            return (
+                user_schema.dump(
+                    {
+                        "user": user,
+                        "token": auth_repository.create_user_token(user),
+                    }
+                ),
+                HTTPStatus.OK,
+            )
         return {
             "messages": {"auth": f"The given credentials are not valid"},
             "error": True,

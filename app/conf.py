@@ -14,6 +14,9 @@ class Config(object):
     API_DESCRIPTION: str = os.environ.get("API_DESCRIPTION")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI")
+    JWT_SESSION_MAX_TIME_IN_MINUTES = int(
+        os.environ.get("JWT_SESSION_MAX_TIME_IN_MINUTES", 30)
+    )
 
 
 class ProductionConfig(Config):
