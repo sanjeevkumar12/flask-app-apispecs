@@ -1,4 +1,4 @@
-from flask import jsonify, make_response
+from flask import jsonify
 
 
 def __format_error_json(messages):
@@ -17,3 +17,9 @@ def handle_error_422(err):
         return jsonify(__format_error_json(messages)), err.code, headers
     else:
         return jsonify(__format_error_json(messages)), err.code
+
+
+def handle_api_error(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response

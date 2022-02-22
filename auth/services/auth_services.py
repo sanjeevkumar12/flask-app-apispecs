@@ -40,16 +40,24 @@ class AuthServiceRepository(SqlAlchemyAdaptor):
             "expire_at": expire_at.total_seconds() * 1000,
         }
 
-    def decode_auth_token(self, auth_token):
+    def decode_auth_token(self, auth_token) -> typing.Union[str, bool, None]:
         """
         Validates the auth token
         :param auth_token:
         :return: bool|string
         """
         try:
-            payload = jwt.decode(auth_token, app.config.get("SECRET_KEY"))
+            payload = jwt.decode(
+                auth_token, app.config.get("SECRET_KEY"), algorithms=["HS256"]
+            )
             return payload["sub"]
         except jwt.ExpiredSignatureError:
             return False
         except jwt.InvalidTokenError:
             return False
+
+    def user_from_auth_token(self, auth_token) -> typing.Union[User, bool, None]:
+        token = self.decode_auth_token(auth_token)
+        if token:
+            return self.entity.query.filter_by(email=token).first()
+        return False

@@ -2,6 +2,8 @@ from functools import wraps
 
 from flask import request
 
+from app.core.http.exceptions.api import UnauthorizedException
+
 from .services import auth_repository
 
 
@@ -9,18 +11,17 @@ def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
-        if "x-access-token" in request.headers:
-            token = request.headers["x-access-token"]
+        if "Authorization" in request.headers:
+            token = request.headers["Authorization"]
         if not token:
-            return "Unauthorized Access!", 401
-
+            raise UnauthorizedException(message="Unauthorized Access!")
         try:
-            current_user = auth_repository.decode_auth_token(token)
-            if not current_user:
-                return "Unauthorized Access!", 401
-            kwargs.update({"user": current_user})
+            current_user = auth_repository.user_from_auth_token(token.split(" ")[-1])
         except Exception:
-            return "Unauthorized Access!", 401
+            raise UnauthorizedException(message="Unauthorized Access!")
+        if not current_user:
+            raise UnauthorizedException(message="Unauthorized Access!")
+        kwargs.update({"user": current_user})
         return f(*args, **kwargs)
 
     return decorated
