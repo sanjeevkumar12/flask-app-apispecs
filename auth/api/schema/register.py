@@ -1,7 +1,9 @@
-from marshmallow import Schema, fields, pre_load
+from marshmallow import fields
+
+from .login import LoginSchema
 
 
-class RegisterSchema(Schema):
+class RegisterSchema(LoginSchema):
     id = fields.Int(dump_only=True)
     email = fields.Email(required=True)
     first_name = fields.String(required=True)
@@ -11,9 +13,3 @@ class RegisterSchema(Schema):
 
     class Meta:
         ordered = True
-
-    @pre_load
-    def process_input(self, data, **kwargs):
-        if "email" in data:
-            data["email"] = data["email"].lower().strip()
-        return data

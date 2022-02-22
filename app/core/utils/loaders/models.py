@@ -1,16 +1,15 @@
 import importlib
 import itertools
-import pathlib
 from inspect import getmembers, isclass
 from os import listdir
 from os import sep as pathsep
 from os import walk
-from os.path import abspath, basename, dirname, isdir, join
+from os.path import isdir, join
 from sys import modules
 
 from flask_sqlalchemy import Model
 
-from app.conf import API_BLUEPRINTS, BASE_DIR, MODEL_LOOKUP_EXCLUDE_DIRECTORY
+from app.conf import BASE_DIR, MODEL_LOOKUP_EXCLUDE_DIRECTORY
 
 
 def valid_module(path, module_name):

@@ -10,9 +10,9 @@ db_migration = Migrate()
 
 
 def init_db(app: Flask):
-    load_models()
     db.init_app(app)
     db_migration.init_app(app=app, db=db)
+    load_models()
 
 
 def register_models():

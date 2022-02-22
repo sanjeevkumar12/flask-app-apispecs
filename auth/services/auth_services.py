@@ -18,3 +18,6 @@ class AuthServiceRepository(SqlAlchemyAdaptor):
 
     def get_user_by_email(self, email) -> typing.Union[User, None]:
         return self.entity.query.filter_by(email=email).first()
+
+    def create_user_token(self, user: User):
+        return {}

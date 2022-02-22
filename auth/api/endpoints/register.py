@@ -1,12 +1,11 @@
 from http import HTTPStatus
 
-from flask import jsonify
-from webargs.flaskparser import use_args, use_kwargs
+from webargs.flaskparser import use_kwargs
 
 from app.extensions.api import views
 
 from ...services import auth_repository
-from ..blueprints import auth_blueprint
+from ..schema.base import UserSchema
 from ..schema.register import RegisterSchema
 
 
@@ -44,4 +43,5 @@ class RegisterAPIView(views.APIView):
                 "error": True,
             }, HTTPStatus.UNPROCESSABLE_ENTITY
         user = auth_repository.create(**kwargs)
-        return user, HTTPStatus.CREATED
+        user_schema = RegisterSchema()
+        return user_schema.dump(user), HTTPStatus.CREATED

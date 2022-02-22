@@ -26,6 +26,7 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING: bool = True
+    SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_TESTING_URI")
 
 
 settings = {
@@ -36,4 +37,4 @@ settings = {
 
 API_BLUEPRINTS = ["auth.api.auth_blueprint"]
 
-MODEL_LOOKUP_EXCLUDE_DIRECTORY = []
+MODEL_LOOKUP_EXCLUDE_DIRECTORY = ["migrations"]
