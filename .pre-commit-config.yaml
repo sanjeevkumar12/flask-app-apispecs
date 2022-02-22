@@ -5,12 +5,6 @@ fail_fast: true
 repos:
   - repo: local
     hooks:
-      - id: isort
-        name: isort
-        stages: [commit]
-        language: system
-        entry: pipenv run isort
-        types: [python]
 
       - id: black
         name: black
@@ -19,10 +13,17 @@ repos:
         entry: pipenv run black
         types: [python]
 
+      - id: isort
+        name: isort
+        stages: [ commit ]
+        language: system
+        entry: pipenv run isort
+        types: [ python ]
+
 
       - id: pytest
         name: pytest
-        stages: [commit]
+        stages: [push]
         language: system
         entry: pipenv run tests
         types: [python]
