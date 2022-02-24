@@ -16,7 +16,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python3 -m pip install --upgrade pipenv
+        python3 -m pip install pip pipenv --upgrade --user
         python3 -m pyenv install 3.9
         python3 -m pipenv install --dev --skip-lock
     - name: Analysing the code with black
