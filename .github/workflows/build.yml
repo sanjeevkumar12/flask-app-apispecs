@@ -17,15 +17,15 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install --upgrade pipenv
-        pyenv install 3.9
-        pipenv install --dev --skip-lock
+        python3 -m pyenv install 3.9
+        python3 -m pipenv install --dev --skip-lock
     - name: Analysing the code with black
       run: |
-        pipenv install blacken
+        python3 -m pipenv install blacken
     - name: Analysing the code with isort
       run: |
-        pipenv install pisort
+        python3 -m pipenv install pisort
     - name: Run Test Case
       run: |
-        pipenv install tests
+        python3 -m pipenv install tests
 
