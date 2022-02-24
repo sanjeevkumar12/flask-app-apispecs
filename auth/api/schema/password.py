@@ -9,4 +9,10 @@ class ChangePasswordSchema(Schema):
 
 
 class ForgotPasswordSchema(Schema):
-    email = fields.String(required=True)
+    email = fields.Email(required=True)
+
+
+class ForgotPasswordResetSchema(Schema):
+    token = fields.Str(required=True)
+    token_hash = fields.Str(required=True)
+    new_password = fields.String(required=True)

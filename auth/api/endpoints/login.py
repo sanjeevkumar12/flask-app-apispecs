@@ -29,25 +29,22 @@ class LoginAPIView(views.APIView):
             200:
                 content:
                     application/json:
-                        schema: UserToken
+                        schema: Token
             422:
                 content:
                     application/json:
                         schema: APIError
         """
-        user = auth_repository.get_user_by_email(kwargs.get("email"))
-        if user and user.check_password(kwargs.get("password")):
-            user_schema = UserTokenSchema()
-            return (
-                user_schema.dump(
-                    {
-                        "user": user,
-                        "token": auth_repository.create_user_token(user),
-                    }
-                ),
-                HTTPStatus.OK,
-            )
-        return {
-            "messages": {"auth": f"The given credentials are not valid"},
-            "error": True,
-        }, HTTPStatus.UNPROCESSABLE_ENTITY
+        user = auth_repository.authenticate_user(
+            kwargs.get("email"), kwargs.get("password")
+        )
+        user_schema = UserTokenSchema()
+        return (
+            user_schema.dump(
+                {
+                    "user": user,
+                    "token": auth_repository.create_user_token(user),
+                }
+            ),
+            HTTPStatus.OK,
+        )

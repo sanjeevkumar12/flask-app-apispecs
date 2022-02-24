@@ -8,8 +8,17 @@ class Config(object):
     BASE_DIR: Path = BASE_DIR
     DEBUG: bool = False
     TESTING: bool = False
+    MAIL_SERVER: str = os.environ.get("MAIL_SERVER")
+    MAIL_USE_TLS: bool = True
+    MAIL_PORT: int = 2525
+    MAIL_DEBUG: bool = int(os.environ.get("MAIL_DEBUG"))
+    MAIL_USE_SSL: bool = False
+    MAIL_USERNAME: str = os.environ.get("MAIL_USERNAME")
+    MAIL_PASSWORD: str = os.environ.get("MAIL_PASSWORD")
+    MAIL_DEFAULT_SENDER: str = os.environ.get("MAIL_DEFAULT_SENDER")
     SECRET_KEY: str = os.environ.get("APP_SECRET_KEY")
     API_TITLE: str = os.environ.get("API_TITLE")
+    APP_ENCRYPTION_KEY: str = os.environ.get("APP_ENCRYPTION_KEY")
     API_VERSION: str = os.environ.get("API_VERSION")
     API_DESCRIPTION: str = os.environ.get("API_DESCRIPTION")
     SQLALCHEMY_TRACK_MODIFICATIONS = False

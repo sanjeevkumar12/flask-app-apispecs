@@ -4,10 +4,16 @@ from datetime import datetime, timedelta
 import jwt
 from flask import current_app as app
 
+from app.core.http.exceptions.api import UnprocessableEntityException
 from app.core.services.sqlalchemy import SqlAlchemyAdaptor
 from app.core.utils.security import ipaddress
+from app.core.utils.security.token import (
+    create_time_bound_token_for_value,
+    decode_token,
+)
 
 from ..models import User
+from ..utils.mail import send_forgot_password_token
 
 
 class AuthServiceRepository(SqlAlchemyAdaptor):
@@ -61,3 +67,53 @@ class AuthServiceRepository(SqlAlchemyAdaptor):
         if token:
             return self.entity.query.filter_by(email=token).first()
         return False
+
+    def change_password(
+        self, user: User, current_password: str, new_password: str
+    ) -> User:
+        if user and user.check_password(current_password):
+            user.password = new_password
+            user.save_to_db()
+            return user
+        raise UnprocessableEntityException(
+            message="The current password is wrong.",
+            payload={"auth": "The current password is wrong."},
+        )
+
+    def authenticate_user(self, email: str, password: str) -> typing.Union[User, None]:
+        user = self.get_user_by_email(email)
+        if user and user.check_password(password):
+            return user
+        else:
+            raise UnprocessableEntityException(
+                message="The given credential are not valid",
+                payload={"auth": "The given credential are not valid."},
+            )
+
+    def forgot_password_email(
+        self,
+        email: str,
+    ):
+        user = self.get_user_by_email(email)
+        token, hash = create_time_bound_token_for_value(user.id)
+        if user:
+            send_forgot_password_token(user=user, token=token)
+        return token, hash
+
+    def forgot_password_reset(self, token_hash: str, token: str, new_password):
+        token_decoded = decode_token(token_hash)
+        user_id, decoded_token, expire = token_decoded.split("-")
+        user = self.get_by_id(user_id)
+        expire_date_time_utc = datetime.utcfromtimestamp(int(expire) + 300)
+        if (
+            user
+            and str(token) == str(decoded_token)
+            and expire_date_time_utc >= datetime.utcnow()
+        ):
+            user.password = new_password
+            user.save_to_db()
+            return user
+        raise UnprocessableEntityException(
+            message="The given token is not valid or expired.",
+            payload={"token": "The given token is not valid or expired."},
+        )

@@ -5,12 +5,14 @@ def __format_error_json(messages):
     if isinstance(messages, dict) and "json" in messages:
         return {
             "error": True,
-            "messages": {key: item[0] for key, item in messages["json"].items()},
+            "messages": {key: item[0] for key, item in messages["json"].items()}
+            if isinstance(messages["json"], dict)
+            else {"body": messages["json"]},
         }
     return messages
 
 
-def handle_error_422(err):
+def handle_error_422_400(err):
     headers = err.data.get("headers", None)
     messages = err.data.get("messages", ["Invalid request."])
     if headers:

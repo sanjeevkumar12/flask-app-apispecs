@@ -6,7 +6,7 @@ from apispec_webframeworks.flask import FlaskPlugin
 from flask import Flask
 from marshmallow import Schema
 
-from app.core.http.response.schemas import APIErrorSchema
+from app.core.http.response.schemas import ActionSuccessSchema, APIErrorSchema
 
 from ..security import jwt_scheme
 
@@ -24,7 +24,8 @@ class OpenAPISpecs(object):
         self.view_path = []
         self.schemas = {}
         self.api_docs.components.security_scheme("JWT", jwt_scheme)
-        self.register_schema("APIError", APIErrorSchema)
+        self.register_schema("APIError", schema=APIErrorSchema)
+        self.register_schema("ActionSuccess", schema=ActionSuccessSchema)
         if self.app:
             self._load()
 
