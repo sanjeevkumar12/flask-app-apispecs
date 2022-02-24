@@ -16,15 +16,15 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python3 -m pip install pip pipenv --upgrade --user
-        python3 -m pipenv install --dev --deploy --skip-lock
+        python3 -m pip install pip pipenv --upgrade
+        pipenv install --dev --deploy --skip-lock
     - name: Analysing the code with black
       run: |
-        python3 -m pipenv install blacken
+        pipenv install blacken
     - name: Analysing the code with isort
       run: |
-        python3 -m pipenv install pisort
+        pipenv install pisort
     - name: Run Test Case
       run: |
-        python3 -m pipenv install tests
+        pipenv install tests
 
