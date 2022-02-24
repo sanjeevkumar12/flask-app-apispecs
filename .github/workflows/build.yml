@@ -17,8 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install pip pipenv --upgrade --user
-        python3 -m pyenv install 3.9
-        python3 -m pipenv install --dev --skip-lock
+        python3 -m pipenv install --dev --deploy --skip-lock
     - name: Analysing the code with black
       run: |
         python3 -m pipenv install blacken
