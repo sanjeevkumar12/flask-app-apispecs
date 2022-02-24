@@ -20,11 +20,11 @@ jobs:
         pipenv install --dev --deploy --skip-lock
     - name: Analysing the code with black
       run: |
-        pipenv install blacken
+        pipenv run blacken
     - name: Analysing the code with isort
       run: |
-        pipenv install pisort
+        pipenv run pisort
     - name: Run Test Case
       run: |
-        pipenv install tests
+        pipenv run tests
 
