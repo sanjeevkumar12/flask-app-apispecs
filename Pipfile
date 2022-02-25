@@ -18,6 +18,8 @@ pyjwt = "*"
 flask-mail = "*"
 flask-bcrypt = "*"
 cryptography = "*"
+faker = "*"
+factory-boy = "*"
 
 [dev-packages]
 black = ">=22.1.0"

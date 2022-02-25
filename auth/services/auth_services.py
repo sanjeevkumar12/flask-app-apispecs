@@ -84,11 +84,10 @@ class AuthServiceRepository(SqlAlchemyAdaptor):
         user = self.get_user_by_email(email)
         if user and user.check_password(password):
             return user
-        else:
-            raise UnprocessableEntityException(
-                message="The given credential are not valid",
-                payload={"auth": "The given credential are not valid."},
-            )
+        raise UnprocessableEntityException(
+            message="The given credential are not valid",
+            payload={"auth": "The given credential are not valid."},
+        )
 
     def forgot_password_email(
         self,
