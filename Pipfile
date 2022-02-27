@@ -35,6 +35,7 @@ python_version = "3.9"
 [scripts]
 server = "flask run"
 blacken = "python -m black ."
+check-blacken = "python -m black . --check"
 flake8 = "python -m flake8"
 pisort = "isort ."
 routes = "flask routes"
