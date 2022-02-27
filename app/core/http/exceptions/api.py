@@ -21,4 +21,4 @@ class UnauthorizedException(APIException):
 
 
 class UnprocessableEntityException(APIException):
-    status_code = 402
+    status_code = 422

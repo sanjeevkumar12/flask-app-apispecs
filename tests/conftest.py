@@ -7,7 +7,7 @@ from app import create_app
 from app.extensions import db
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def app():
     app = create_app("testing")
     with app.app_context():

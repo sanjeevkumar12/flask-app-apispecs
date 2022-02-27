@@ -18,7 +18,7 @@ class User(Model):
     password_hash = db.Column(db.String(244))
 
     def __repr__(self):
-        return "<User: {}".format(self.slug)
+        return "<User: {}>".format(self.email)
 
     @property
     def password(self):

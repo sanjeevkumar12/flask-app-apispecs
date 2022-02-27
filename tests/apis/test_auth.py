@@ -1,84 +1,58 @@
 import json
-from dataclasses import dataclass
 from http import HTTPStatus
 
 from flask import Flask, url_for
 from flask.testing import FlaskClient
 from pytest import fixture
 
+from auth.models import User
 from auth.services import auth_repository
 
-
-@fixture
-def api_user_data() -> dict:
-    return {
-        "email": "api-user@gmail.com",
-        "first_name": "API",
-        "last_name": "Kumar",
-        "password": "test@123",
-    }
+from ..factories.helpers import random_password
+from ..factories.user import UserFactory
 
 
-@fixture
-def api_user(api_user_data):
-    return auth_repository.create(commit=True, **api_user_data)
+@fixture(scope="module")
+def api_user() -> User:
+    password = random_password(10)
+    user = UserFactory.build(password=password)
+    user.raw_password = password
+    return user
 
 
-@fixture
-def login_data(app: Flask, client: FlaskClient, api_user_data):
+def test_create_user(app: Flask, client: FlaskClient, api_user: User):
     with app.app_context(), app.test_request_context():
-        email = api_user.email
-        password = "test@123"
-        response = client.post(
-            url_for("api.auth.login"),
-            data=json.dumps(
-                {
-                    "email": email,
-                    "password": password,
-                }
-            ),
-            content_type="application/json",
-        )
-
-        assert response.status_code == HTTPStatus.OK
-
-
-def test_create_user(app: Flask, client: FlaskClient):
-    with app.app_context(), app.test_request_context():
-        email = "test_create_user@gmail.com"
-        password = "test@123"
+        print(api_user)
         response = client.post(
             url_for("api.auth.register"),
             data=json.dumps(
                 {
-                    "email": email,
-                    "password": password,
-                    "confirm_password": password,
-                    "first_name": "Sanjeev",
-                    "last_name": "Kumar",
+                    "email": api_user.email,
+                    "password": api_user.raw_password,
+                    "confirm_password": api_user.raw_password,
+                    "first_name": api_user.first_name,
+                    "last_name": api_user.last_name,
                 }
             ),
             content_type="application/json",
         )
-        user = auth_repository.get_user_by_email(email=email)
-
+        user = auth_repository.get_user_by_email(email=api_user.email)
         assert response.status_code == HTTPStatus.CREATED
-        assert user.email == email
+        assert user.email == api_user.email
+        api_user.id = user.id
 
 
-def test_login(app: Flask, client: FlaskClient, api_user):
+def test_login(app: Flask, client: FlaskClient, api_user, logger):
     with app.app_context(), app.test_request_context():
-        email = "test_create_user@gmail.com"
-        password = "test@123"
+        logger.info(api_user.email)
         response = client.post(
             url_for("api.auth.login"),
             data=json.dumps(
                 {
-                    "email": email,
-                    "password": password,
+                    "email": api_user.email,
+                    "password": api_user.raw_password,
                 }
             ),
             content_type="application/json",
         )
-
-        assert response.status_code == HTTPStatus.OK
+        # assert response.status_code == HTTPStatus.OK
