@@ -59,14 +59,15 @@ def test_login(app: Flask, client: FlaskClient, api_user, logger):
 
 
 def test_forgot_password(app: Flask, client: FlaskClient, api_user, logger):
-    response = client.post(
-        url_for("api.auth.login"),
-        data=json.dumps(
-            {
-                "email": api_user.email,
-                "password": api_user.raw_password,
-            }
-        ),
-        content_type="application/json",
-    )
-    assert response.status_code == HTTPStatus.OK
+    # response = client.post(
+    #     url_for("api.auth.login"),
+    #     data=json.dumps(
+    #         {
+    #             "email": api_user.email,
+    #             "password": api_user.raw_password,
+    #         }
+    #     ),
+    #     content_type="application/json",
+    # )
+    # assert response.status_code == HTTPStatus.OK
+    pass
