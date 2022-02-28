@@ -1,5 +1,7 @@
 import json
 from http import HTTPStatus
+from unittest import mock
+
 
 from flask import Flask, url_for
 from flask.testing import FlaskClient
@@ -7,6 +9,8 @@ from pytest import fixture
 
 from auth.models import User
 from auth.services import auth_repository
+from app.core.utils.security.token import create_time_bound_token_for_value
+
 
 from ..factories.helpers import random_password
 from ..factories.user import UserFactory
@@ -58,16 +62,17 @@ def test_login(app: Flask, client: FlaskClient, api_user, logger):
         assert response.status_code == HTTPStatus.OK
 
 
-def test_forgot_password(app: Flask, client: FlaskClient, api_user, logger):
-    # response = client.post(
-    #     url_for("api.auth.login"),
-    #     data=json.dumps(
-    #         {
-    #             "email": api_user.email,
-    #             "password": api_user.raw_password,
-    #         }
-    #     ),
-    #     content_type="application/json",
-    # )
-    # assert response.status_code == HTTPStatus.OK
-    pass
+@mock.patch('app.core.utils.security.token.create_time_bound_token_for_value')
+@mock.patch('auth.utils.mail.send_forgot_password_token', return_value=False)
+def test_forgot_password(create_time_bound_token_for_value, send_forgot_password_token, app: Flask, client: FlaskClient, api_user, logger, *args, **kwargs):
+    with app.app_context(), app.test_request_context():
+        response = client.post('/api/v1/auth/forgot-password',
+            data=json.dumps(
+                {
+                    "email": api_user.email
+                }
+            ),
+            content_type="application/json",
+        )
+        # assert response.status_code == HTTPStatus.OK
+        pass

@@ -20,6 +20,7 @@ flask-bcrypt = "*"
 cryptography = "*"
 faker = "*"
 factory-boy = "*"
+pytest-mock = "*"
 
 [dev-packages]
 black = ">=22.1.0"
