@@ -1,10 +1,13 @@
+from logging import Logger
+
 import pytest
+from flask import Flask
 
 from app import create_app
 from app.extensions import db
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def app():
     app = create_app("testing")
     with app.app_context():
@@ -22,3 +25,8 @@ def client(app):
 @pytest.fixture()
 def runner(app):
     return app.test_cli_runner()
+
+
+@pytest.fixture
+def logger(app: Flask) -> Logger:
+    return app.logger

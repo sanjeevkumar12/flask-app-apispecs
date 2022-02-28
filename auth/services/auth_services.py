@@ -14,6 +14,7 @@ from app.core.utils.security.token import (
 
 from ..models import User
 from ..utils.mail import send_forgot_password_token
+from ..types import UserLoginToken
 
 
 class AuthServiceRepository(SqlAlchemyAdaptor):
@@ -30,7 +31,7 @@ class AuthServiceRepository(SqlAlchemyAdaptor):
     def get_user_by_email(self, email) -> typing.Union[User, None]:
         return self.entity.query.filter_by(email=email).first()
 
-    def create_user_token(self, user: User):
+    def create_user_token(self, user: User) -> UserLoginToken:
         expire_at = timedelta(minutes=app.config.get("JWT_SESSION_MAX_TIME_IN_MINUTES"))
         now = datetime.utcnow()
         payload = {
@@ -40,11 +41,11 @@ class AuthServiceRepository(SqlAlchemyAdaptor):
             "secure_number": ipaddress.get_user_encoded_ip_address(),
         }
         token = jwt.encode(payload, app.config.get("SECRET_KEY"), algorithm="HS256")
-        return {
+        return UserLoginToken(**{
             "access_token": token,
             "token_type": "Bearer",
             "expire_at": expire_at.total_seconds() * 1000,
-        }
+        })
 
     def decode_auth_token(self, auth_token) -> typing.Union[str, bool, None]:
         """
@@ -84,11 +85,10 @@ class AuthServiceRepository(SqlAlchemyAdaptor):
         user = self.get_user_by_email(email)
         if user and user.check_password(password):
             return user
-        else:
-            raise UnprocessableEntityException(
-                message="The given credential are not valid",
-                payload={"auth": "The given credential are not valid."},
-            )
+        raise UnprocessableEntityException(
+            message="The given credential are not valid",
+            payload={"auth": "The given credential are not valid."},
+        )
 
     def forgot_password_email(
         self,
