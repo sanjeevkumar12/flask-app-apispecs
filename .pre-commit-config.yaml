@@ -21,6 +21,11 @@ repos:
         entry: pipenv run tests
         types: [python]
 
+  - repo: https://github.com/pycqa/flake8
+    rev: ''
+    hooks:
+      - id: flake8
+
   - repo: https://github.com/psf/black
     rev: 22.1.0
     hooks:
