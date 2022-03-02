@@ -17,7 +17,7 @@ repos:
       - id: pytest
         name: pytest
         stages: [ push ]
-        language: system
+        language: python
         entry: pipenv run tests
         types: [python]
 
