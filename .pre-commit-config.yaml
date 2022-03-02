@@ -14,13 +14,6 @@ repos:
         entry: pipenv run pisort
         types: [ python ]
 
-      - id: pytest
-        name: pytest
-        stages: [ push ]
-        language: python
-        entry: pipenv run tests
-        types: [python]
-
   - repo: https://github.com/pycqa/flake8
     rev: 3.7.9
     hooks:
