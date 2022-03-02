@@ -106,16 +106,17 @@ class AuthServiceRepository(SqlAlchemyAdaptor):
         token_decoded = decode_token(token_hash)
         user_id, decoded_token, expire = token_decoded.split("-")
         user = self.get_by_id(user_id)
-        expire_date_time_utc = datetime.utcfromtimestamp(int(expire) + 300)
+        expire_date_time_utc = int(expire) + 300
+        current_timestamp = int(datetime.utcnow().timestamp())
         if (
             user
             and str(token) == str(decoded_token)
-            and expire_date_time_utc >= datetime.utcnow()
+            and expire_date_time_utc >= int(current_timestamp)
         ):
             user.password = new_password
             user.save_to_db()
             return user
-        raise UnprocessableEntityException(
-            message="The given token is not valid or expired.",
-            payload={"token": "The given token is not valid or expired."},
-        )
+        # raise UnprocessableEntityException(
+        #     message="The given token is not valid or expired.",
+        #     payload={"token": "The given token is not valid or expired."},
+        # )

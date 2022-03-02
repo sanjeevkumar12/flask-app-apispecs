@@ -8,6 +8,7 @@ from pytest import fixture
 from auth.models import User
 from auth.services import auth_repository
 
+
 from ..factories.helpers import random_password
 from ..factories.user import UserFactory
 
@@ -55,3 +56,4 @@ def test_login(app: Flask, client: FlaskClient, api_user, logger):
             content_type="application/json",
         )
         assert response.status_code == HTTPStatus.OK
+
