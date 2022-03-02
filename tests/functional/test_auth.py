@@ -47,4 +47,6 @@ def test_invalid_username_password(app: Flask, logger):
             password = random_password(10)
             user = UserFactory.build(password=password)
             auth_repository.authenticate_user(email=user.email, password=user.password)
-            logger.info(f"Message : {e_info.message} , Status : {e_info.status_code}")
+        logger.info(
+            f"Message : {e_info.value.message} , Status : {e_info.value.status_code} "
+        )
