@@ -116,7 +116,7 @@ class AuthServiceRepository(SqlAlchemyAdaptor):
             user.password = new_password
             user.save_to_db()
             return user
-        # raise UnprocessableEntityException(
-        #     message="The given token is not valid or expired.",
-        #     payload={"token": "The given token is not valid or expired."},
-        # )
+        raise UnprocessableEntityException(
+            message="The given token is not valid or expired.",
+            payload={"token": "The given token is not valid or expired."},
+        )
