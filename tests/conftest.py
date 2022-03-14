@@ -14,7 +14,6 @@ def app():
         db.drop_all()
         db.create_all()
         yield app
-        db.drop_all()
 
 
 @pytest.fixture()

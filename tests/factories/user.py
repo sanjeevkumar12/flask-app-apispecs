@@ -1,3 +1,5 @@
+import typing
+
 import factory
 
 from app.extensions import get_session
@@ -16,3 +18,11 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = User
         sqlalchemy_session = get_session()
+
+    @staticmethod
+    def build_invalid_users_for_register() -> typing.List[User]:
+        return [
+            UserFactory.build(email="invalid email"),
+            UserFactory.build(password="in"),
+            UserFactory.build(first_name=""),
+        ]
