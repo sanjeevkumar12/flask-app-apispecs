@@ -19,9 +19,10 @@ class Model(base_db.Model):
     def find_all(cls) -> List["Model"]:
         return cls.query.all()
 
-    def save_to_db(self) -> None:
+    def save_to_db(self) -> "Model":
         base_db.session.add(self)
         base_db.session.commit()
+        return self
 
     def delete_from_db(self) -> None:
         base_db.session.delete(self)
