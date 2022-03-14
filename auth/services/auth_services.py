@@ -12,7 +12,7 @@ from app.core.utils.security.token import (
     decode_token,
 )
 
-from ..models import User
+from ..models import BlacklistToken, User
 from ..types import UserLoginToken
 from ..utils.mail import send_forgot_password_token
 
@@ -120,3 +120,14 @@ class AuthServiceRepository(SqlAlchemyAdaptor):
             message="The given token is not valid or expired.",
             payload={"token": "The given token is not valid or expired."},
         )
+
+    def update_user(self, user: User, first_name: str, last_name: str):
+        user.first_name = first_name
+        user.last_name = last_name
+        user.save_to_db()
+        return user
+
+    def mark_token_expire(self, token):
+        if token:
+            black_list_token = BlacklistToken(token)
+            black_list_token.save_to_db()

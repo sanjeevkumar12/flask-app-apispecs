@@ -24,6 +24,15 @@ class UserSchema(Schema):
         ordered = True
 
 
+class UserProfileSchema(Schema):
+    id = fields.Int(dump_only=True)
+    first_name = fields.String(required=True)
+    last_name = fields.String()
+
+    class Meta:
+        ordered = True
+
+
 class UserTokenSchema(Schema):
     user = fields.Nested(UserSchema)
     token = fields.Nested(TokenSchema)
