@@ -1,6 +1,8 @@
 from datetime import datetime
 
 from sqlalchemy import event, select
+from sqlalchemy.engine import Connection
+from sqlalchemy.orm import Mapper
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.core.db import Model
@@ -32,7 +34,7 @@ class User(Model):
         return check_password_hash(self.password_hash, password)
 
 
-class BlacklistToken(db.Model):
+class BlacklistToken(Model):
     """
     Token Model for storing JWT tokens
     """
@@ -61,7 +63,7 @@ class BlacklistToken(db.Model):
 
 
 @event.listens_for(User, "before_insert")
-def create_username(mapper, connection, target):
+def create_username(mapper: Mapper, connection: Connection, target: Model):
     slug = "{}-{}".format(target.first_name, target.last_name)
     user_table = User.__table__
     slug_search = slugify(slug)

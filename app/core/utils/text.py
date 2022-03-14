@@ -23,9 +23,6 @@ try:
 except ImportError:
     import unidecode
 
-__all__ = ["slugify", "smart_truncate"]
-
-
 CHAR_ENTITY_PATTERN = re.compile(r"&(%s);" % "|".join(name2codepoint))
 DECIMAL_PATTERN = re.compile(r"&#(\d+);")
 HEX_PATTERN = re.compile(r"&#x([\da-fA-F]+);")
@@ -211,3 +208,6 @@ def random_str(length: int) -> str:
             for i in range(length)
         )
     )
+
+
+__all__ = ["slugify", "smart_truncate", "random_str"]

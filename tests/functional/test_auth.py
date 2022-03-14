@@ -1,3 +1,5 @@
+from unittest import mock
+
 from flask import Flask
 from pytest import fixture, raises
 
@@ -47,4 +49,17 @@ def test_invalid_username_password(app: Flask, logger):
             password = random_password(10)
             user = UserFactory.build(password=password)
             auth_repository.authenticate_user(email=user.email, password=user.password)
-            logger.info(f"Message : {e_info.message} , Status : {e_info.status_code}")
+        logger.info(
+            f"Message : {e_info.value.message} , Status : {e_info.value.status_code} "
+        )
+
+
+def test_forgot_password(mocker, app: Flask, test_user, logger):
+    with app.app_context(), app.test_request_context():
+        mocker.patch(
+            "auth.services.auth_services.send_forgot_password_token", return_value=True
+        )
+        password = random_password(10)
+        token, token_hash = auth_repository.forgot_password_email(test_user.email)
+        user = auth_repository.forgot_password_reset(token_hash, token, password)
+        assert user.check_password(password)
