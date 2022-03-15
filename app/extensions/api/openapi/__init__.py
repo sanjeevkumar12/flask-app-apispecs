@@ -13,7 +13,7 @@ from ..security import jwt_scheme
 
 class OpenAPISpecs(object):
     def __init__(self, app: Flask = None):
-        self.app = None
+        self.app = app
         self.api_docs: typing.Union[APISpec, None] = APISpec(
             title="API's",
             version="1.0.0",

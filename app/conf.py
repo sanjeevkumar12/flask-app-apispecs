@@ -47,6 +47,6 @@ settings = {
     "testing": "app.conf.TestingConfig",
 }
 
-API_BLUEPRINTS = ["auth.api.auth_blueprint"]
+API_BLUEPRINTS = ["auth.api.auth_blueprint", "task_manager.api.task_manager_blueprint"]
 
 MODEL_LOOKUP_EXCLUDE_DIRECTORY = ["migrations"]
