@@ -6,9 +6,15 @@ from ..extensions import db as base_db
 class Model(base_db.Model):
     __abstract__ = True
 
-    created_on = base_db.Column(base_db.DateTime, default=base_db.func.now())
+    query: base_db.Query
+
+    created_on = base_db.Column(
+        base_db.DateTime(timezone=True), default=base_db.func.now()
+    )
     updated_on = base_db.Column(
-        base_db.DateTime, default=base_db.func.now(), onupdate=base_db.func.now()
+        base_db.DateTime(timezone=True),
+        default=base_db.func.now(),
+        onupdate=base_db.func.now(),
     )
 
     @classmethod

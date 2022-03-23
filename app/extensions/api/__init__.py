@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from flask import Blueprint, Flask, jsonify
+from flask import Blueprint, Flask
 
 from app import conf
 from app.core.http.exceptions.api import APIException

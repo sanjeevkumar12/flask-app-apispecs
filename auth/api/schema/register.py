@@ -11,9 +11,12 @@ class RegisterSchema(LoginSchema):
     first_name = fields.String(required=True)
     last_name = fields.String(required=True)
     password = fields.String(
-        description="Password must have at least one number, one uppercase and one lowercase character and one special symbol",
         required=True,
         load_only=True,
+        metadata={
+            "description": "Password must have at least one number, one uppercase and \
+             one lowercase character and one special symbol",
+        },
         validate=[
             validate.Length(min=6, max=36),
             validate.Regexp(

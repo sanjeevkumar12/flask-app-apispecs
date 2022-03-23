@@ -1,5 +1,3 @@
-from unittest import mock
-
 from flask import Flask
 from pytest import fixture, raises
 
