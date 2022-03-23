@@ -13,6 +13,8 @@ def create_app(env: str = "development"):
         config_object = settings[env]
         app.config.from_object(config_object)
         app.logger.info(f"App Initialized with {env} environment")
+        if app.debug:
+            app.logger.info(f"{app.config}")
         init_extensions(app)
         app.add_url_rule("/", "home", home_page)
         return app

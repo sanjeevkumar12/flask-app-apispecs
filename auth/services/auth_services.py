@@ -15,6 +15,7 @@ from app.core.utils.security.token import (
 from ..models import BlacklistToken, User
 from ..types import UserLoginToken
 from ..utils.mail import send_forgot_password_token
+from ..signals import USER_REGISTER_SIGNAL
 
 
 class AuthServiceRepository(SqlAlchemyAdaptor):
@@ -26,6 +27,7 @@ class AuthServiceRepository(SqlAlchemyAdaptor):
         self.session.add(user)
         if commit:
             self.session.commit()
+            USER_REGISTER_SIGNAL.send(app, user=user)
         return user
 
     def get_user_by_email(self, email) -> typing.Union[User, None]:
