@@ -18,6 +18,10 @@ class User(Model):
     slug = db.Column(db.String(244), unique=True)
     email = db.Column(db.String(244), unique=True)
     password_hash = db.Column(db.String(244))
+    is_active = db.Column(db.Boolean, default=False)
+    last_login_date = db.Column(
+        db.DateTime(timezone=True), default=db.func.now()
+    )
 
     def __repr__(self):
         return "<User: {}>".format(self.email)
@@ -32,6 +36,10 @@ class User(Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def update_last_login(self):
+        self.last_login_date = str(db.func.now())
+        return self.save_to_db()
 
 
 class BlacklistToken(Model):
@@ -77,4 +85,4 @@ def create_username(mapper: Mapper, connection: Connection, target: Model):
             slug_search = "{slug}-{randstr}".format(slug=slug, randstr=random_str(6))
             continue
         break
-    target.slug = slug_search
+    target.slug = slug_search.lower()

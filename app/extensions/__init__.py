@@ -16,4 +16,11 @@ def init_extensions(app: Flask):
     signals.init_signal(app)
 
 
-__all__ = ["db", "init_extensions", "db_migration", "get_session", "api_docs", "signals"]
+__all__ = [
+    "db",
+    "init_extensions",
+    "db_migration",
+    "get_session",
+    "api_docs",
+    "signals",
+]

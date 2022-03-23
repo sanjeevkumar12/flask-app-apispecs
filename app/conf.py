@@ -9,10 +9,18 @@ class Config(object):
     DEBUG: bool = False
     TESTING: bool = False
     MAIL_SERVER: str = os.environ.get("MAIL_SERVER")
-    MAIL_USE_TLS: bool = os.environ.get("MAIL_USE_TLS", False).lower() in {"1", "t", "true"}
+    MAIL_USE_TLS: bool = os.environ.get("MAIL_USE_TLS", False).lower() in {
+        "1",
+        "t",
+        "true",
+    }
     MAIL_PORT: int = os.environ.get("MAIL_PORT")
     MAIL_DEBUG: bool = int(os.environ.get("MAIL_DEBUG"))
-    MAIL_USE_SSL: bool = os.environ.get("MAIL_USE_SSL", False).lower() in {"1", "t", "true"}
+    MAIL_USE_SSL: bool = os.environ.get("MAIL_USE_SSL", False).lower() in {
+        "1",
+        "t",
+        "true",
+    }
     MAIL_USERNAME: str = os.environ.get("MAIL_USERNAME")
     MAIL_PASSWORD: str = os.environ.get("MAIL_PASSWORD")
     MAIL_DEFAULT_SENDER: str = os.environ.get("MAIL_DEFAULT_SENDER")
