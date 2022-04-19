@@ -7,19 +7,20 @@ _DATABASE_SETTINGS = {
     "DB_NAME": os.environ.get("SQLALCHEMY_DATABASE_NAME"),
     "DB_USERNAME": os.environ.get("SQLALCHEMY_DATABASE_USERNAME"),
     "DB_PASS": os.environ.get("SQLALCHEMY_DATABASE_PASSWORD"),
-    "DB_PORT": os.environ.get("SQLALCHEMY_DATABASE_PASSWORD"),
+    "DB_PORT": os.environ.get("SQLALCHEMY_DATABASE_PORT"),
+    "DB_HOST": os.environ.get("SQLALCHEMY_DATABASE_HOST"),
 }
 
 _DATABASE_TEST_SETTINGS = _DATABASE_SETTINGS.copy()
 _DATABASE_TEST_SETTINGS["DB_NAME"] = os.environ.get("SQLALCHEMY_TEST_DATABASE_NAME")
 
 _SQLALCHEMY_URI = (
-    "postgresql://{DB_USERNAME}:{DB_PASS}@localhost:{DB_PORT}/{DB_NAME}".format(
+    "postgresql://{DB_USERNAME}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}".format(
         **_DATABASE_SETTINGS
     )
 )
 _TEST_SQLALCHEMY_URI = (
-    "postgresql://{DB_USERNAME}:{DB_PASS}@localhost:{DB_PORT}/{DB_NAME}".format(
+    "postgresql://{DB_USERNAME}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}".format(
         **_DATABASE_TEST_SETTINGS
     )
 )
@@ -30,10 +31,18 @@ class Config(object):
     DEBUG: bool = False
     TESTING: bool = False
     MAIL_SERVER: str = os.environ.get("MAIL_SERVER")
-    MAIL_USE_TLS: bool = True
-    MAIL_PORT: int = 2525
+    MAIL_USE_TLS: bool = os.environ.get("MAIL_USE_TLS", False).lower() in {
+        "1",
+        "t",
+        "true",
+    }
+    MAIL_PORT: int = os.environ.get("MAIL_PORT")
     MAIL_DEBUG: bool = int(os.environ.get("MAIL_DEBUG"))
-    MAIL_USE_SSL: bool = False
+    MAIL_USE_SSL: bool = os.environ.get("MAIL_USE_SSL", False).lower() in {
+        "1",
+        "t",
+        "true",
+    }
     MAIL_USERNAME: str = os.environ.get("MAIL_USERNAME")
     MAIL_PASSWORD: str = os.environ.get("MAIL_PASSWORD")
     MAIL_DEFAULT_SENDER: str = os.environ.get("MAIL_DEFAULT_SENDER")

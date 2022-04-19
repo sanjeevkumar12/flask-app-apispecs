@@ -8,6 +8,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY Pipfile Pipfile.lock ./
 RUN pipenv install --system --deploy --ignore-pipfile
-COPY . .
-CMD ["pipenv", "run", "server", "-h", "0.0.0.0"]
-EXPOSE 5000
+COPY . /usr/src/app/
+COPY docker/flask/docker-entrypoint.sh /usr/src/app/docker-entrypoint.sh
+RUN ["chmod", "+x", "/usr/src/app/docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/src/app/docker-entrypoint.sh"]

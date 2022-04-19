@@ -8,7 +8,7 @@ from .endpoints.password import (
     ForgotPasswordResetAPIView,
 )
 from .endpoints.profile import UserProfileUpdateView
-from .endpoints.register import RegisterAPIView
+from .endpoints.register import RegisterActivateAPIView, RegisterAPIView
 from .endpoints.user import CurrentUserAPIView, UserLogoutView
 from .schema.base import TokenSchema, UserProfileSchema, UserSchema, UserTokenSchema
 from .schema.password import (
@@ -16,9 +16,12 @@ from .schema.password import (
     ForgotPasswordResetSchema,
     ForgotPasswordSchema,
 )
-from .schema.register import LoginSchema, RegisterSchema
+from .schema.register import LoginSchema, RegisterActivateUserSchema, RegisterSchema
 
 openapi.open_api_docs.register_schema("Register", RegisterSchema)
+openapi.open_api_docs.register_schema(
+    "RegisterActivateUser", RegisterActivateUserSchema
+)
 openapi.open_api_docs.register_schema("Token", TokenSchema)
 openapi.open_api_docs.register_schema("ChangePassword", ChangePasswordSchema)
 openapi.open_api_docs.register_schema("ForgotPassword", ForgotPasswordSchema)
@@ -28,6 +31,7 @@ openapi.open_api_docs.register_schema("UserProfile", UserProfileSchema)
 openapi.open_api_docs.register_schema("Login", LoginSchema)
 
 register_view = RegisterAPIView.as_view("register")
+register_view_activate = RegisterActivateAPIView.as_view("register-activate")
 login_view = LoginAPIView.as_view("login")
 user_me_view = CurrentUserAPIView.as_view("me")
 forgot_password_view = ForgotPasswordAPIView.as_view("forgot_password")
@@ -38,6 +42,9 @@ logout_view = UserLogoutView.as_view("logout")
 
 auth_blueprint.add_url_rule("/register", view_func=register_view)
 openapi.open_api_docs.add_view_to_doc(register_view)
+
+auth_blueprint.add_url_rule("/register/activate", view_func=register_view_activate)
+openapi.open_api_docs.add_view_to_doc(register_view_activate)
 
 auth_blueprint.add_url_rule("/login", view_func=login_view)
 openapi.open_api_docs.add_view_to_doc(login_view)

@@ -1,4 +1,4 @@
-from marshmallow import ValidationError, fields, validate, validates_schema
+from marshmallow import Schema, ValidationError, fields, validate, validates_schema
 
 from app.core.utils.security import password
 
@@ -26,6 +26,7 @@ class RegisterSchema(LoginSchema):
         ],
     )
     confirm_password = fields.String(required=True)
+    register_hash = fields.String(dump_only=True, required=False)
 
     @validates_schema
     def validate_numbers(self, data, **kwargs):
@@ -36,3 +37,8 @@ class RegisterSchema(LoginSchema):
 
     class Meta:
         ordered = True
+
+
+class RegisterActivateUserSchema(Schema):
+    token = fields.Str(required=True)
+    token_hash = fields.Str(required=True)
