@@ -1,4 +1,6 @@
 import typing
+from dataclasses import dataclass
+from typing import Any, List, Optional
 
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
@@ -11,6 +13,17 @@ from app.core.http.response.schemas import ActionSuccessSchema, APIErrorSchema
 from ..security import jwt_scheme
 
 
+@dataclass
+class APISpecsViewParams(object):
+    path: Optional[str]
+    operations: Optional[Any]
+    summary: Optional[str]
+    description: Optional[str]
+    parameters: Optional[List]
+    view: Optional[Any]
+    kwargs: Optional[dict]
+
+
 class OpenAPISpecs(object):
     def __init__(self, app: Flask = None):
         self.app = app
@@ -21,7 +34,7 @@ class OpenAPISpecs(object):
             info=dict(description="A minimal API"),
             plugins=[FlaskPlugin(), MarshmallowPlugin()],
         )
-        self.view_path = []
+        self.view_path: List[APISpecsViewParams] = []
         self.schemas = {}
         self.api_docs.components.security_scheme("JWT", jwt_scheme)
         self.register_schema("APIError", schema=APIErrorSchema)
@@ -43,13 +56,38 @@ class OpenAPISpecs(object):
     def register_schema(self, name: str, schema: Schema) -> None:
         self.api_docs.components.schema(name, schema=schema)
 
-    def add_view_to_doc(self, view):
-        self.view_path.append(view)
+    def add_view_to_doc(
+        self,
+        view,
+        *,
+        path=None,
+        operations=None,
+        summary=None,
+        description=None,
+        parameters=None,
+        **kwargs
+    ):
+        api_params = APISpecsViewParams(
+            path=path,
+            operations=operations,
+            summary=summary,
+            description=description,
+            parameters=parameters,
+            view=view,
+            kwargs=kwargs,
+        )
+        self.view_path.append(api_params)
 
     def to_dict(self):
         with self.app.app_context():
-            for view in self.view_path:
-                self.api_docs.path(view=view)
+            for params in self.view_path:
+                self.api_docs.path(
+                    view=params.view,
+                    path=params.path,
+                    operations=params.operations,
+                    parameters=params.parameters,
+                    **params.kwargs
+                )
         return self.api_docs.to_dict()
 
 

@@ -422,12 +422,12 @@ def send_forgot_password_token(user, token):
     send_message(user.email, "Forgot Password", message)
 
 
-def send_register_user_email(user):
+def send_register_user_email(user, token):
     message = render_template_string(
         SIMPLE_MESSEGE_HTML,
         **{
             "username": f"{user.first_name} {user.last_name}",
-            "message": f"Welcome to Test Site",
+            "message": f"Welcome to Test Site, Your registration token is {token}",
         },
     )
     send_message(user.email, "Welcome to Test Site", message)

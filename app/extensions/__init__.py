@@ -1,11 +1,11 @@
-from flask import Flask, jsonify
+from flask import Flask
 
 from app.extensions.api.openapi import open_api_docs as api_docs
 
+from . import signals
 from .api import init_apis
 from .database import db, db_migration, get_session, init_db
 from .mail import mail
-from . import signals
 
 
 def init_extensions(app: Flask):
@@ -16,4 +16,11 @@ def init_extensions(app: Flask):
     signals.init_signal(app)
 
 
-__all__ = ["db", "init_extensions", "db_migration", "get_session", "api_docs", "signals"]
+__all__ = [
+    "db",
+    "init_extensions",
+    "db_migration",
+    "get_session",
+    "api_docs",
+    "signals",
+]

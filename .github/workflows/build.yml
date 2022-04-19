@@ -39,6 +39,12 @@ jobs:
         pipenv run tests
       env:
         SQLALCHEMY_DATABASE_TESTING_URI: postgresql://postgres:postgres@localhost:5432/pytest_test
+        SQLALCHEMY_DATABASE_HOST : localhost
+        SQLALCHEMY_DATABASE_NAME : pytest_test
+        SQLALCHEMY_TEST_DATABASE_NAME : pytest_test
+        SQLALCHEMY_DATABASE_USERNAME : postgres
+        SQLALCHEMY_DATABASE_PASSWORD: postgres
+        SQLALCHEMY_DATABASE_PORT : 5432
         APP_SECRET_KEY : ${{secrets.APP_SECRET_KEY}}
         APP_DEBUG : true
         APP_ENV : development
@@ -56,5 +62,4 @@ jobs:
         MAIL_PASSWORD : ${{secrets.MAIL_PASSWORD}}
         APP_ENCRYPTION_KEY : ${{secrets.APP_ENCRYPTION_KEY}}
         MAIL_DEFAULT_SENDER : no-reply@example.com
-        SQLALCHEMY_DATABASE_URI : postgresql://postgres:postgres@localhost:5432/pytest_test
 

@@ -20,5 +20,9 @@ class UnauthorizedException(APIException):
     status_code = 401
 
 
+class NotFoundException(APIException):
+    status_code = 404
+
+
 class UnprocessableEntityException(APIException):
     status_code = 422

@@ -26,6 +26,14 @@ def api_user() -> User:
 
 
 @fixture(scope="module")
+def existing_api_user() -> User:
+    password = random_password(10)
+    user = UserFactory.create(password=password)
+    user.raw_password = password
+    return user
+
+
+@fixture(scope="module")
 def logged_user_token(app: Flask, client: FlaskClient) -> LoggedInState:
     password = random_password(10)
     user = UserFactory.build(password=password)
@@ -96,15 +104,17 @@ class TestRegisterUser(object):
 
 class TestLoginUser(object):
     @mark.api
-    def test_login(self, app: Flask, client: FlaskClient, api_user, logger):
+    def test_login(self, app: Flask, client: FlaskClient, existing_api_user, logger):
         with app.app_context(), app.test_request_context():
-            logger.info(f"{api_user.to_dict()}  -> {api_user.raw_password}")
+            logger.info(
+                f"{existing_api_user.to_dict()}  -> {existing_api_user.raw_password}"
+            )
             response = client.post(
                 url_for("api.auth.login"),
                 data=json.dumps(
                     {
-                        "email": api_user.email,
-                        "password": api_user.raw_password,
+                        "email": existing_api_user.email,
+                        "password": existing_api_user.raw_password,
                     }
                 ),
                 content_type="application/json",

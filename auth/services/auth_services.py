@@ -13,9 +13,9 @@ from app.core.utils.security.token import (
 )
 
 from ..models import BlacklistToken, User
+from ..signals import USER_REGISTER_SIGNAL
 from ..types import UserLoginToken
 from ..utils.mail import send_forgot_password_token
-from ..signals import USER_REGISTER_SIGNAL
 
 
 class AuthServiceRepository(SqlAlchemyAdaptor):
@@ -27,8 +27,30 @@ class AuthServiceRepository(SqlAlchemyAdaptor):
         self.session.add(user)
         if commit:
             self.session.commit()
-            USER_REGISTER_SIGNAL.send(app, user=user)
+            token, hash_ = create_time_bound_token_for_value(user.id)
+            USER_REGISTER_SIGNAL.send(app, user=user, token=token)
+            setattr(user, "register_hash", hash_)
         return user
+
+    def user_account_activate(self, token_hash: str, token: str):
+        token_decoded = decode_token(token_hash)
+        user_id, decoded_token, expire = token_decoded.split("-")
+        user = self.get_by_id(user_id)
+        expire_date_time_utc = int(expire) + 300
+        current_timestamp = int(datetime.utcnow().timestamp())
+        if (
+            user
+            and not user.is_active
+            and str(token) == str(decoded_token)
+            and expire_date_time_utc >= int(current_timestamp)
+        ):
+            user.is_active = True
+            user.save_to_db()
+            return user
+        raise UnprocessableEntityException(
+            message="The given token is not valid or expired.",
+            payload={"token": "The given token is not valid or expired."},
+        )
 
     def get_user_by_email(self, email) -> typing.Union[User, None]:
         return self.entity.query.filter_by(email=email).first()
@@ -87,11 +109,15 @@ class AuthServiceRepository(SqlAlchemyAdaptor):
 
     def authenticate_user(self, email: str, password: str) -> typing.Union[User, None]:
         user = self.get_user_by_email(email)
+        fail_message = "The given credential are not valid."
         if user and user.check_password(password):
-            return user
+            if user.is_active:
+                user.update_last_login()
+                return user
+            fail_message = "User account is not active."
         raise UnprocessableEntityException(
-            message="The given credential are not valid",
-            payload={"auth": "The given credential are not valid."},
+            message=fail_message,
+            payload={"auth": fail_message},
         )
 
     def forgot_password_email(
@@ -99,10 +125,10 @@ class AuthServiceRepository(SqlAlchemyAdaptor):
         email: str,
     ):
         user = self.get_user_by_email(email)
-        token, hash = create_time_bound_token_for_value(user.id)
+        token, hash_ = create_time_bound_token_for_value(user.id)
         if user:
             send_forgot_password_token(user=user, token=token)
-        return token, hash
+        return token, hash_
 
     def forgot_password_reset(self, token_hash: str, token: str, new_password):
         token_decoded = decode_token(token_hash)
