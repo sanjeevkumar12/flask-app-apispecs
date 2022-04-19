@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask
 
 from app.extensions.api.openapi import open_api_docs as api_docs
 

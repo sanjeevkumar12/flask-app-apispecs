@@ -74,7 +74,9 @@ def create_username(mapper: Mapper, connection: Connection, target: Model):
             .order_by(user_table.c.slug.desc())
         ).fetchone()
         if row:
-            slug_search = "{slug}-{randstr}".format(slug=slug, randstr=random_str(6))
+            slug_search = "{slug}-{randstr}".format(
+                slug=slug, randstr=random_str(6).lower()
+            )
             continue
         break
     target.slug = slug_search

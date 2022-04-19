@@ -1,0 +1,41 @@
+version: '3.6'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/flask/Dockerfile
+    container_name: 'flask-api'
+    env_file:
+      - .env
+    networks:
+      - default
+    ports:
+      - 5000:5000
+    volumes:
+      - ./:/usr/src/app
+    restart: always
+  db:
+    environment:
+      POSTGRES_USER:  'postgres'
+      POSTGRES_PASSWORD:  'postgres'
+      POSTGRES_DB:  'user_app_flp'
+    image: postgres:latest
+    container_name: 'flask-db'
+    networks:
+      - default
+    ports:
+      - 5432:5432
+    restart: always
+    volumes:
+      - postgres-flask-app-data:/var/lib/postgresql/data
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: always
+    container_name: 'flask-mail-host'
+    ports:
+      - 1025:1025
+      - 8025:8025
+
+volumes:
+  postgres-flask-app-data : null

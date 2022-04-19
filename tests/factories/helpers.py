@@ -13,7 +13,8 @@ def random_password(length=10) -> str:
         random.sample(lower, 1)
         + random.sample(upper, 1)
         + random.sample(symbols, 1)
-        + random.sample(_all, length - 3)
+        + random.sample(num, 1)
+        + random.sample(_all, length - 4)
     )
     return "".join(temp)
 

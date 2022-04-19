@@ -3,6 +3,27 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).parent.parent
 
+_DATABASE_SETTINGS = {
+    "DB_NAME": os.environ.get("SQLALCHEMY_DATABASE_NAME"),
+    "DB_USERNAME": os.environ.get("SQLALCHEMY_DATABASE_USERNAME"),
+    "DB_PASS": os.environ.get("SQLALCHEMY_DATABASE_PASSWORD"),
+    "DB_PORT": os.environ.get("SQLALCHEMY_DATABASE_PASSWORD"),
+}
+
+_DATABASE_TEST_SETTINGS = _DATABASE_SETTINGS.copy()
+_DATABASE_TEST_SETTINGS["DB_NAME"] = os.environ.get("SQLALCHEMY_TEST_DATABASE_NAME")
+
+_SQLALCHEMY_URI = (
+    "postgresql://{DB_USERNAME}:{DB_PASS}@localhost:{DB_PORT}/{DB_NAME}".format(
+        **_DATABASE_SETTINGS
+    )
+)
+_TEST_SQLALCHEMY_URI = (
+    "postgresql://{DB_USERNAME}:{DB_PASS}@localhost:{DB_PORT}/{DB_NAME}".format(
+        **_DATABASE_TEST_SETTINGS
+    )
+)
+
 
 class Config(object):
     BASE_DIR: Path = BASE_DIR
@@ -22,7 +43,7 @@ class Config(object):
     API_VERSION: str = os.environ.get("API_VERSION")
     API_DESCRIPTION: str = os.environ.get("API_DESCRIPTION")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI")
+    SQLALCHEMY_DATABASE_URI = _SQLALCHEMY_URI
     JWT_SESSION_MAX_TIME_IN_MINUTES = int(
         os.environ.get("JWT_SESSION_MAX_TIME_IN_MINUTES", 30)
     )
@@ -38,7 +59,7 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING: bool = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_TESTING_URI")
+    SQLALCHEMY_DATABASE_URI = _TEST_SQLALCHEMY_URI
 
 
 settings = {
